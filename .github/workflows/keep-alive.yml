@@ -1,4 +1,7 @@
-name: Keep Repo Alive
+name   名字: Keep Repo Alive
+permissions:
+  contents: write
+
 on:   :
   schedule:   时间表:
     # 每50天自动执行一次空提交，防止60天闲置冻结定时任务
@@ -12,12 +15,10 @@ jobs:   工作:
     steps:   步骤:
       - name: 拉取仓库代码
         uses: actions/checkout@v4   使用：actions/checkout@v4
-        with:   :
-          persist-credentials: true
 
       - name: 配置用户信息并推送空白提交
         run: |   运行:|
           git config --global user.name "Auto Bot"
           git config --global user.email "bot@github.com"
-          git commit --allow-empty -m "Auto keep action alive $(date +%Y-%m-%d)"
-          git push
+          git commit --allow-empty -m "Auto keep action alive $(date +%Y-%m-%d)"git commit --allow-empty -m "自动保持操作活跃 $(date %Y-%m-%d)"
+          git push   git推

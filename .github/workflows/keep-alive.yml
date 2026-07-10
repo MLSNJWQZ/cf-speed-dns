@@ -11,12 +11,10 @@ jobs:   工作:
   keepalive:
     runs-on: ubuntu-latest   运行于：ubuntu-latest
     steps:   步骤:
-      - name: 拉取仓库代码
-        uses: actions/checkout@v4   使用：actions/checkout@v4
-
-      - name: 配置用户并推送空白提交
+      - uses: actions/checkout@v4
+      - name: Empty Commit Keep Alive
         run: |   运行:|
-          git config --global user.name "Auto Bot"
-          git config --global user.email "bot@github.com"
-          git commit --allow-empty -m "Auto keep action alive $(date +%Y-%m-%d)"git commit --allow-empty -m "自动保持操作活跃 $(date %Y-%m-%d)"
+          git config --global user.name "AutoBot"
+          git config --global user.email "autobot@github.com"
+          git commit --allow-empty -m "Auto Renew Activity $(date +%Y-%m-%d)"
           git push   git推

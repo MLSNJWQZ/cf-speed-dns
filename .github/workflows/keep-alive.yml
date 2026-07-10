@@ -1,0 +1,23 @@
+name: Keep Repo Alive
+on:   :
+  schedule:   时间表:
+    # 每50天自动执行一次空提交，防止60天闲置冻结定时任务
+    - cron: '0 0 */50 * *'
+  # 支持手动一键运行续命
+  workflow_dispatch:
+
+jobs:   工作:
+  keepalive:
+    runs-on: ubuntu-latest   运行于：ubuntu-latest
+    steps:   步骤:
+      - name: 拉取仓库代码
+        uses: actions/checkout@v4   使用：actions/checkout@v4
+        with:   :
+          persist-credentials: true
+
+      - name: 配置用户信息并推送空白提交
+        run: |   运行:|
+          git config --global user.name "Auto Bot"
+          git config --global user.email "bot@github.com"
+          git commit --allow-empty -m "Auto keep action alive $(date +%Y-%m-%d)"
+          git push

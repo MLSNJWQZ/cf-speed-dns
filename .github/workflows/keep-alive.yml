@@ -1,20 +1,21 @@
-name   名字: Keep Repo Alive
-permissions:   权限:
-  contents: write   内容:写
+name: Keep Repo Alive
 
-on:   :
-  schedule:   时间表:
-    - cron: '0 0 */50 * *'
+permissions:
+  contents: write
+
+on:
+  schedule:
+    - cron: '0 3 5 * *'
   workflow_dispatch:
 
-jobs:   工作:
+jobs:
   keepalive:
-    runs-on: ubuntu-latest   运行于：ubuntu-latest
-    steps:   步骤:
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v4
       - name: Empty Commit Keep Alive
-        run: |   运行:|
+        run: |
           git config --global user.name "AutoBot"
           git config --global user.email "autobot@github.com"
           git commit --allow-empty -m "Auto Renew Activity $(date +%Y-%m-%d)"
-          git push   git推
+          git push

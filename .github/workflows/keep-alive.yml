@@ -1,21 +1,38 @@
 name: Keep Repo Alive
 
-permissions:
-  contents: write
-
+# 每月1号凌晨3点运行一次，足以骗过60天无操作检测
 on:
   schedule:
-    - cron: '0 3 5 * *'
-  workflow_dispatch:
+    - cron: '0 3 1 * *'
+  workflow_dispatch: # 允许手动点击运行测试
 
 jobs:
-  keepalive:
+  keep-alive:
     runs-on: ubuntu-latest
+    
+    # 【关键修改】必须显式赋予写入权限，否则自动提交会失败
+    permissions:
+      contents: write
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Empty Commit Keep Alive
+      - name: Checkout repository
+        # 使用 v4 版本，避免 Node.js 20 弃用警告
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # 必须配置用户信息，否则 git commit 会报错
+          # 这里使用 GitHub Actions 默认的机器人身份
+          persist-credentials: true 
+
+      - name: Create Keep-Alive Commit
         run: |
-          git config --global user.name "AutoBot"
-          git config --global user.email "autobot@github.com"
-          git commit --allow-empty -m "Auto Renew Activity $(date +%Y-%m-%d)"
-          git push
+          # 配置 Git 用户信息（防止因为没配置用户而报错）
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          # 创建一个带时间戳的空提交
+          # --allow-empty 允许不修改文件也能提交，专门用于刷活跃度
+          git commit --allow-empty -m "chore: auto keep-alive commit $(date '+%Y-%m-%d %H:%M:%S')"
+          
+          # 推送到当前分支
+          git push origin HEAD:${{ github.ref_name }}
